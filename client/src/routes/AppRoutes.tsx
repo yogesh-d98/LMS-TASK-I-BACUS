@@ -13,7 +13,7 @@ const AppRoutes = () => {
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          {/* Root redirection
+          {/* 
           <Route
             path="/"
             element={
