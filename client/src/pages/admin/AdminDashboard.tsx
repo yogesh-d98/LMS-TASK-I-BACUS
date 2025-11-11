@@ -8,13 +8,22 @@ import {
 import Header from "../../components/Header";
 
 const AdminDashboard = () => {
+  const [employeeName, setEmployeeName] = React.useState("");
+  const [leaveType, setLeaveType] = React.useState("");
+  const [status, setStatus] = React.useState("");
   const { data: summary, isLoading: summaryLoading } = useGetDashboardSummaryQuery();
-  const { data: leaves, isLoading: leavesLoading } = useFilterLeavesQuery({});
-   const [approveLeave, { isLoading: isApproving }] = useApproveLeaveMutation();
+
+  const { data: leaves, isLoading: leavesLoading } = useFilterLeavesQuery({
+    employeeName,
+    leaveType,
+    status,
+  });
+
+  const [approveLeave, { isLoading: isApproving }] = useApproveLeaveMutation();
   const [rejectLeave, { isLoading: isRejecting }] = useRejectLeaveMutation();
 
   if (summaryLoading || leavesLoading) return <p className="p-4">Loading...</p>;
-    // function for approving leave
+  // function for approving leave
   const handleApprove = async (id: string) => {
     if (window.confirm("Are you sure you want to approve this leave?")) {
       try {
@@ -47,6 +56,7 @@ const AdminDashboard = () => {
       <div className="p-6">
         {/* Dashboard Summary */}
         <h2 className="text-xl font-semibold mb-4">Dashboard Summary</h2>
+        {/* setting a grid fto showcase dashboard summary  */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
           <div className="p-4 bg-white border rounded">
             Total Employees: {summary?.result.totalEmployees ?? 0}
@@ -68,6 +78,43 @@ const AdminDashboard = () => {
         {/* listing leave records */}
         <h2 className="text-xl font-semibold mb-4">Leave Requests</h2>
         <div className="bg-white border rounded">
+          {/* 🔍 Filter Section */}
+          <div className="flex flex-wrap gap-4 mb-4 bg-white p-3 border rounded">
+            {/* Employee Name */}
+            <input
+              type="text"
+              placeholder="Search by Employee"
+              value={employeeName}
+              onChange={(e) => setEmployeeName(e.target.value)}
+              className="border border-gray-300 rounded px-3 py-1"
+            />
+
+            {/* Leave Type */}
+            <select
+              value={leaveType}
+              onChange={(e) => setLeaveType(e.target.value)}
+              className="border border-gray-300 rounded px-3 py-1"
+            >
+              <option value="">All Types</option>
+              <option value="Casual">Casual</option>
+              <option value="Sick">Sick</option>
+              <option value="Paid">Paid</option>
+              \<option value="Mandatory">Mandatory</option>
+            </select>
+
+            {/* Status */}
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="border border-gray-300 rounded px-3 py-1"
+            >
+              <option value="">All Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+
           <table className="w-full text-left text-sm">
             <thead className="bg-gray-200">
               <tr>
@@ -81,7 +128,7 @@ const AdminDashboard = () => {
             </thead>
             <tbody>
               {leaves?.result?.length ? (
-                leaves.result.map((leave:any) => (
+                leaves.result.map((leave: any) => (
                   <tr key={leave._id} className="border-t">
                     <td className="px-3 py-2">{leave.employeeId?.name || "N/A"}</td>
                     <td className="px-3 py-2">{leave.leaveType}</td>
@@ -92,24 +139,26 @@ const AdminDashboard = () => {
                       {new Date(leave.toDate).toLocaleDateString()}
                     </td>
                     <td className="px-3 py-2">{leave.status}</td>
-                    
+
                     <td className="px-3 py-2">
+
+                      {/* Approve / Reject button will be show only if the status is pending */}
                       {leave.status === "Pending" &&
-                      <>
-                       <button  
-                        className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition"
-                        onClick={() => handleApprove(leave._id)}
-                          disabled={isApproving}
-                       >Approve</button>
-                     <button   
-                     className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition"
-                     onClick={()=>handleReject(leave._id)}
-                     disabled={isRejecting}
-                     >Reject</button>
-                      </>}
-                     </td>
-                   
-                   
+                        <>
+                          <button
+                            className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition"
+                            onClick={() => handleApprove(leave._id)}
+                            disabled={isApproving}
+                          >Approve</button>
+                          <button
+                            className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition"
+                            onClick={() => handleReject(leave._id)}
+                            disabled={isRejecting}
+                          >Reject</button>
+                        </>}
+                    </td>
+
+
                   </tr>
                 ))
               ) : (
