@@ -31,7 +31,7 @@ const Login = () => {
       dispatch(setCredentials({ user, accessToken, refreshToken }));
 
       if (user.role === 'admin') {
-        navigate('/dashboard');
+        navigate('/admin-dashboard');
       } else {
         navigate('/employee-dashboard');
       }

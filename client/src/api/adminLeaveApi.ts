@@ -7,7 +7,7 @@ export const adminLeaveApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Leaves', 'Dashboard'],
   endpoints: (builder) => ({
-    // 1️⃣ Filter leaves (by employeeName, leaveType, or status)
+    // Filter leaves (by employeeName, leaveType, or status)
     // filterLeaves: builder.query<LeaveResponse[], { employeeName?: string; leaveType?: string; status?: string }>({
     filterLeaves: builder.query<LeaveResponse, { employeeName?: string; leaveType?: string; status?: string }>({
 
@@ -21,7 +21,7 @@ export const adminLeaveApi = createApi({
       providesTags: ['Leaves'],
     }),
 
-    // 2️⃣ Approve leave
+    //  Approve leave
     approveLeave: builder.mutation<LeaveResponse, string>({
       query: (leaveId) => ({
         url: `/admin-leave/${leaveId}/approve`,
@@ -30,7 +30,7 @@ export const adminLeaveApi = createApi({
       invalidatesTags: ['Leaves', 'Dashboard'],
     }),
 
-    // 3️⃣ Reject leave
+    //  Reject leave
     rejectLeave: builder.mutation<LeaveResponse, string>({
       query: (leaveId) => ({
         url: `/admin-leave/${leaveId}/reject`,
@@ -39,7 +39,7 @@ export const adminLeaveApi = createApi({
       invalidatesTags: ['Leaves', 'Dashboard'],
     }),
 
-    // 4️⃣ Dashboard summary
+    //  Dashboard summary
     getDashboardSummary: builder.query<DashboardSummary, void>({
       query: () => ({ url: '/admin-leave/dashboard/summary', method: 'GET' }),
       providesTags: ['Dashboard'],
