@@ -37,3 +37,9 @@ export interface SignupResponse {
   success: boolean;
   message: string;
 }
+
+
+export interface ProtectedRouteProps {
+  children: React.ReactNode;
+  allowedRoles: ("admin" | "employee")[];
+}

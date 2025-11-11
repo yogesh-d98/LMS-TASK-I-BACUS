@@ -2,11 +2,8 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../app/store";
+import type { ProtectedRouteProps } from "../types";
 
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-  allowedRoles: ("admin" | "employee")[];
-}
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
   const { user } = useSelector((state: RootState) => state.auth);
